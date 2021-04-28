@@ -25,10 +25,6 @@ import imblearn
 import pycaret.classification as pyc
 from pycaret.datasets import get_data
 
-
-import kerastuner as kt
-from tensorflow.keras.models import load_model
-
 # plotting
 import matplotlib.pyplot as plt
 # from dtreeviz.trees import *
@@ -39,14 +35,27 @@ from pandas_profiling import ProfileReport
 
 # Interpretation
 import dalex as dx
-import shap
-import lime
 
 # #Redis
 # import redis
 # from redis_namespace import StrictRedis
 
 
-st.write("Hello World")
+st.header("Explainable-ml-app")
 
+INDEX = get_data("index")
+
+st.write("Datasets")
+st.dataframe(INDEX, height=3000)
+
+AUSWAHL = st.selectbox(label = "Dataset", options = [""] + INDEX.Dataset.tolist())
+
+if AUSWAHL == "":
+    st.stop()
+
+else:
+    DATENSATZ = get_data(AUSWAHL)
+
+    st.write(DATENSATZ)
+    st.balloons()
 
