@@ -22,7 +22,8 @@ import sqlalchemy as sqla
 from sklearn.metrics import classification_report, confusion_matrix
 import imblearn
 
-import pycaret.classification as pyc
+import pycaret.classification as pcc
+import pycaret.regression as pcr
 from pycaret.datasets import get_data
 
 # plotting
@@ -40,22 +41,40 @@ import dalex as dx
 # import redis
 # from redis_namespace import StrictRedis
 
+def upload_data(file):
+    DF = pd.read_csv(file, encoding='utf-8')
+    return DF
 
-st.header("Explainable-ml-app")
 
-INDEX = get_data("index")
+st.sidebar.header("Explainable-ml-app")
 
-st.write("Datasets")
-st.dataframe(INDEX, height=3000)
 
-AUSWAHL = st.selectbox(label = "Dataset", options = [""] + INDEX.Dataset.tolist())
+def main():
+    TYPE = st.sidebar.selectbox(label = "Type", options = ["Classification", "Regression"])
+    st.header(TYPE)
 
-if AUSWAHL == "":
-    st.stop()
+    DATA = st.sidebar.selectbox(label = "Data", options = ["Dummydata", "CSV-File"])
 
-else:
-    DATENSATZ = get_data(AUSWAHL)
+    if DATA == "Dummydata":
+        INDEX = get_data("index")
+        AUSWAHL = st.sidebar.selectbox(label = "Dataset", options = [""] + INDEX.Dataset.tolist())
 
-    st.write(DATENSATZ)
-    st.balloons()
+        if AUSWAHL == "":
+            st.dataframe(INDEX, height=3000)
 
+        else:
+            DATENSATZ = get_data(AUSWAHL)
+            st.write(DATENSATZ.head(100))
+            
+
+    elif DATA == "CSV-File":
+        FILE = st.sidebar.file_uploader("Choose a file")
+        try:
+            CSV_FILE = pd.read_csv(FILE)
+            st.write(CSV_FILE.head())
+        except:
+            st.stop()
+
+
+if __name__ == "__main__":
+    main()
