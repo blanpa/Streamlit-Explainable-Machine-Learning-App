@@ -20,7 +20,7 @@ dalex
 # https://pycaret.readthedocs.io/en/latest/installation.html
 # keras-tuner
 # autokeras
-pycaret-nightly[full]
+pycaret-nightly#[full]
 
 
 # for local development:
