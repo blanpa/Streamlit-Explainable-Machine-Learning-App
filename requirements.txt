@@ -1,0 +1,29 @@
+## streamlit
+streamlit
+streamlit-pandas-profiling
+
+## Ploting 
+pylint
+altair
+dtreeviz
+
+## SQL
+# psycopg2
+# SQLAlchemy
+
+# Erklärungsänsätze
+# lime
+# pdpbox
+dalex
+
+## Machine Learning Bibliotheken
+# https://pycaret.readthedocs.io/en/latest/installation.html
+# keras-tuner
+# autokeras
+pycaret-nightly[full]
+
+
+# for local development:
+# conda install -c anaconda ipykernel
+
+opencv-python
