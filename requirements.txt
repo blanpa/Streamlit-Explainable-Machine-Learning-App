@@ -12,7 +12,7 @@ dtreeviz
 # SQLAlchemy
 
 # Erklärungsänsätze
-lime
+#lime
 #pdpbox
 dalex
 
