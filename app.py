@@ -182,7 +182,6 @@ def main():
         except:
             pass
 
-
         PLOTS = st.multiselect(
             label = "AUSWAHL_PLOTS", 
             options = ["residuals_interactive", "residuals", "error", "cooks", "rfe", "learning", "boundary", "rfe", "vc", "manifold", "feature", "feature_all", "parameter", "feature", "tree"], 
@@ -190,8 +189,6 @@ def main():
             )
 
         col1, col2 = st.beta_columns(2)
-
-        pcc.plot_model(BEST, "residuals_interactive" ,use_train_data = True, display_format="streamlit")
 
         with col1:
             st.markdown("### Ergebnisse TRAININGS-Datensatz")

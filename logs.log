@@ -2691,3 +2691,23 @@ llar         Lasso Least Angle Regression  0.4720  0.2363  0.4859 -0.0141    0.0
 lr                      Linear Regression  0.4526  1.3590  0.8828 -4.8448    0.0  0.6448     2.244
 par          Passive Aggressive Regressor  0.8916  1.9241  1.2369 -7.3839    0.0  1.0800     0.098]
 2021-04-29 16:29:25,588:INFO:get_config() succesfully completed......................................
+2021-04-29 16:45:31,062:INFO:Initializing get_config()
+2021-04-29 16:45:31,068:INFO:get_config(variable=display_container)
+2021-04-29 16:45:31,132:INFO:Global variable: display_container returned as [<pandas.io.formats.style.Styler object at 0x00000287678400A0>,                                     Model     MAE     MSE    RMSE      R2  RMSLE    MAPE  TT (Sec)
+gbr           Gradient Boosting Regressor  0.2745  0.1378  0.3697  0.4086    0.0  0.3825     0.411
+ridge                    Ridge Regression  0.2943  0.1398  0.3729  0.3995    0.0  0.3834     0.045
+br                         Bayesian Ridge  0.2976  0.1412  0.3748  0.3934    0.0  0.3883     1.939
+catboost               CatBoost Regressor  0.2651  0.1422  0.3754  0.3896    0.0  0.3759     3.804
+xgboost         Extreme Gradient Boosting  0.2293  0.1448  0.3774  0.3794    0.0  0.3392     1.518
+rf                Random Forest Regressor  0.2198  0.1532  0.3878  0.3435    0.0  0.3295     0.704
+ada                    AdaBoost Regressor  0.3054  0.1556  0.3928  0.3341    0.0  0.3465     0.081
+et                  Extra Trees Regressor  0.2085  0.1684  0.4075  0.2796    0.0  0.3305     1.059
+omp           Orthogonal Matching Pursuit  0.2821  0.1708  0.4114  0.2660    0.0  0.3978     0.035
+dt                Decision Tree Regressor  0.1877  0.1877  0.4280  0.1957    0.0  0.2763     2.101
+huber                     Huber Regressor  0.2412  0.1908  0.4347  0.1786    0.0  0.3513     0.755
+en                            Elastic Net  0.4448  0.2210  0.4697  0.0518    0.0  0.5874     0.035
+lasso                    Lasso Regression  0.4489  0.2226  0.4715  0.0449    0.0  0.5920     0.037
+lightgbm  Light Gradient Boosting Machine  0.0000  0.0000  0.0000  0.0000    0.0  0.0000     0.032
+llar         Lasso Least Angle Regression  0.4720  0.2363  0.4859 -0.0141    0.0  0.6196     1.952
+lr                      Linear Regression  0.4526  1.3590  0.8828 -4.8448    0.0  0.6448     2.244
+par          Passive Aggressive Regressor  0.8916  1.9241  1.2369 -7.3839    0.0  1.0800     0.098]
