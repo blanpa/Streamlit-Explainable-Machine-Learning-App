@@ -134,10 +134,27 @@ def main():
 
 
     if TYPE == "Classification":
-        pass
+        if st.button("Train Model"):
+            SETUPCLASSIFICATION = pcc.setup(data = DATENSATZ, target = TARGET, silent = True, html = False)
+            BEST = pcc.compare_models()
+        
+        try:
+            st.write(pcc.get_config("display_container")[1])
+            st.write(BEST)
+        except:
+            pass
 
     elif TYPE == "Regression":
-        pass
+        if st.button("Train Model"):
+            SETUPREGRESSION = pcr.setup(data = DATENSATZ, target = TARGET, silent = True, html = False)
+            BEST = pcr.compare_models()
+
+        try:
+            st.write(pcr.get_config("display_container")[1])
+            st.write(BEST)
+        except:
+            pass
+        
 
 if __name__ == "__main__":
     main()
