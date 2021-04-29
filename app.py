@@ -144,6 +144,33 @@ def main():
         except:
             pass
 
+        PLOTS = st.multiselect(
+                label = "AUSWAHL_PLOTS", 
+                options = ["auc", "threshold", "pr", "confusion_matrix", "error", "class_report", "boundary", "rfe", "learning", "manifold", "calibration", "vc", "dimension", "feature", "lift", "gain", "tree"], 
+                default = ["confusion_matrix", "class_report", "auc"]
+                )
+
+        col1, col2 = st.beta_columns(2)
+        with col1:
+            st.markdown("### Ergebnisse TRAININGS-Datensatz")
+            for i in PLOTS:
+                try:
+                    st.markdown(f"#### {i}")
+                    pcc.plot_model(BEST, i ,use_train_data = True, display_format="streamlit")
+                    #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = True), use_column_width=True)
+                except:
+                    st.write(f"Plot {i} konnte nicht erstellt werden!")
+                    
+        with col2:
+            st.markdown("### Ergebnisse TEST-Datensatz") 
+            for i in pcc.plot_model():
+                try:
+                    st.markdown(f"#### {i}")
+                    pcc.plot_model(BEST, i ,use_train_data = False, display_format="streamlit")
+                    #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = False), use_column_width=True)
+                except:
+                    st.write(f"Plot {i} konnte nicht erstellt werden!")
+
     elif TYPE == "Regression":
         if st.button("Train Model"):
             SETUPREGRESSION = pcr.setup(data = DATENSATZ, target = TARGET, silent = True, html = False)
@@ -154,6 +181,37 @@ def main():
             st.write(BEST)
         except:
             pass
+
+
+        PLOTS = st.multiselect(
+            label = "AUSWAHL_PLOTS", 
+            options = ["residuals_interactive", "residuals", "error", "cooks", "rfe", "learning", "boundary", "rfe", "vc", "manifold", "feature", "feature_all", "parameter", "feature", "tree"], 
+            default = ["residuals_interactive", "residuals", "error"]
+            )
+
+        col1, col2 = st.beta_columns(2)
+
+        pcc.plot_model(BEST, "residuals_interactive" ,use_train_data = True, display_format="streamlit")
+
+        with col1:
+            st.markdown("### Ergebnisse TRAININGS-Datensatz")
+            for i in PLOTS:
+                try:
+                    st.markdown(f"#### {i}")
+                    pcc.plot_model(BEST, i ,use_train_data = True, display_format="streamlit")
+                    #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = True), use_column_width=True)
+                except:
+                    st.write(f"Plot {i} konnte nicht erstellt werden!")
+                    
+        with col2:
+            st.markdown("### Ergebnisse TEST-Datensatz") 
+            for i in PLOTS:
+                try:
+                    st.markdown(f"#### {i}")
+                    pcc.plot_model(BEST, i ,use_train_data = False, display_format="streamlit")
+                    #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = False), use_column_width=True)
+                except:
+                    st.write(f"Plot {i} konnte nicht erstellt werden!")
         
 
 if __name__ == "__main__":
