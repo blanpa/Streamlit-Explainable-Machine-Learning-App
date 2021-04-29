@@ -43,15 +43,42 @@ import dalex as dx
 
 def upload_data(file):
     DF = pd.read_csv(file, encoding='utf-8')
-    return DF
+  
+  
+################################################
+# Init
+################################################
+st.set_page_config(
+    page_title="Explainable-ml-app",
+    #page_icon = "",
+    layout="wide",
+    initial_sidebar_state="expanded")
+
+st.set_option('deprecation.showPyplotGlobalUse', False)
+st.set_option('deprecation.showfileUploaderEncoding', False)
 
 
 st.sidebar.header("Explainable-ml-app")
+BREITE = st.sidebar.slider(label ="Display-size", min_value = 300, max_value=3000, value = 1400, step= 100)
+
+st.markdown(
+    f"""
+    <style>
+    .reportview-container .main .block-container{{
+        max-width: {BREITE}px;
+    }}
+    </style>
+    """,unsafe_allow_html=True)
 
 
 def main():
-    TYPE = st.sidebar.selectbox(label = "Type", options = ["Classification", "Regression"])
+
+    
+    TYPE = st.sidebar.selectbox(label = "Type", options = [ "", "Classification", "Regression"])
     st.header(TYPE)
+
+    if TYPE == "":
+        st.stop()
 
     DATA = st.sidebar.selectbox(label = "Data", options = ["Dummydata", "CSV-File"])
 
@@ -61,20 +88,51 @@ def main():
 
         if AUSWAHL == "":
             st.dataframe(INDEX, height=3000)
+            st.stop()
 
         else:
             DATENSATZ = get_data(AUSWAHL)
-            st.write(DATENSATZ.head(100))
             
 
     elif DATA == "CSV-File":
         FILE = st.sidebar.file_uploader("Choose a file")
         try:
-            CSV_FILE = pd.read_csv(FILE)
-            st.write(CSV_FILE.head())
+            DATENSATZ = pd.read_csv(FILE)
         except:
             st.stop()
 
+    st.write("Dataset")
+    st.write(DATENSATZ.head(100).head(100).style.highlight_null(null_color='red'))
+
+    PANDASPR = st.checkbox(label ="show data report", value = False)
+
+    if PANDASPR == True:
+        with st.beta_expander("Data Report"):
+            import streamlit.components.v1 as components
+            components.html(html=ProfileReport(df = DATENSATZ, minimal = False).to_html(), scrolling = True, height = 1000)
+
+
+    st.write("_______")
+    st.header("Target")
+
+    TARGET = st.selectbox(
+        label = "choose target", 
+        options = [" "] + DATENSATZ.columns.tolist(), 
+        index = (0))
+
+    col1, _ = st.beta_columns(2)
+    try:
+        with col1:
+            st.bar_chart(DATENSATZ[TARGET].value_counts())
+        import numpy as np
+        neg, pos = np.bincount(DATENSATZ[TARGET])
+        total = neg + pos
+        st.text('Instanzen: \n Gesamt: {}\n Positiv: {} ({:.2f}% von allen)\n'.format(total, pos, 100 * pos / total))
+    except:
+        pass
+
+
+    st.write("tbc")
 
 if __name__ == "__main__":
     main()
