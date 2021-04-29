@@ -71,9 +71,10 @@ st.markdown(
     """,unsafe_allow_html=True)
 
 
-def main():
 
-    
+
+
+def main():
     TYPE = st.sidebar.selectbox(label = "Type", options = [ "", "Classification", "Regression"])
     st.header(TYPE)
 
@@ -132,7 +133,11 @@ def main():
         pass
 
 
-    st.write("tbc")
+    if TYPE == "Classification":
+        pass
+
+    elif TYPE == "Regression":
+        pass
 
 if __name__ == "__main__":
     main()
