@@ -1,4 +1,5 @@
 import logging, os
+from pycaret.internal.preprocess import DFS_Classic
 
 #Streamlit
 import streamlit as st
@@ -80,6 +81,10 @@ st.markdown(
     </style>
     """,unsafe_allow_html=True)
 
+@st.cache
+def trained_classification_model():
+    BEST = pcc.compare_models()
+    return BEST
 
 def main():
     TYPE = st.sidebar.selectbox(label = "Type", options = [ "", "Classification", "Regression"])
@@ -121,12 +126,15 @@ def main():
 
 
     st.write("_______")
-    st.header("Target")
+    st.header("Train ML Model")
 
     TARGET = st.selectbox(
         label = "choose target", 
         options = [" "] + DATENSATZ.columns.tolist(), 
         index = (0))
+    
+    if TARGET == " ":
+        st.stop()
 
     col1, _ = st.beta_columns(2)
     try:
@@ -139,44 +147,55 @@ def main():
     except:
         pass
 
+    with st.beta_expander("Settings"):
+        pass
 
     if TYPE == "Classification":
+        MODELS = [" ", "lr", "knn", "nb", "dt", "svm", "rbfsvm", "gpc", "mlp", "ridge", "rf", "qda", "ada", "gbc", "lda", "et", "xgboost", "lightgbm", "catboost"]
+        MODEL_LIST = st.multiselect(
+            label = "models", 
+            options = MODELS, 
+            default = ["lr", "knn", "nb", "dt", "svm", "rbfsvm", "gpc", "mlp", "ridge", "rf", "qda", "ada", "gbc", "lda", "et", "xgboost", "lightgbm", "catboost"] )
+
         if st.button("Train Model"):
             SETUPCLASSIFICATION = pcc.setup(data = DATENSATZ, target = TARGET, silent = True, html = False)
-            BEST = pcc.compare_models()
-        
-        try:
-            st.write(pcc.get_config("display_container")[1])
-            st.write(BEST)
-        except:
-            pass
+            trained_classification_model()
 
-        PLOTS = st.multiselect(
-                label = "AUSWAHL_PLOTS", 
-                options = ["auc", "threshold", "pr", "confusion_matrix", "error", "class_report", "boundary", "rfe", "learning", "manifold", "calibration", "vc", "dimension", "feature", "lift", "gain", "tree"], 
-                default = ["confusion_matrix", "class_report", "auc"]
-                )
+        with st.beta_expander("Scores"):
+            try:
+                st.write(pcc.get_config("display_container")[1])
+                st.write(trained_classification_model())
+            except:
+                pass
 
-        col1, col2 = st.beta_columns(2)
-        with col1:
-            st.markdown("### Ergebnisse TRAININGS-Datensatz")
-            for i in PLOTS:
-                try:
-                    st.markdown(f"#### {i}")
-                    pcc.plot_model(BEST, i ,use_train_data = True, display_format="streamlit")
-                    #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = True), use_column_width=True)
-                except:
-                    st.write(f"Plot {i} konnte nicht erstellt werden!")
-                    
-        with col2:
-            st.markdown("### Ergebnisse TEST-Datensatz") 
-            for i in pcc.plot_model():
-                try:
-                    st.markdown(f"#### {i}")
-                    pcc.plot_model(BEST, i ,use_train_data = False, display_format="streamlit")
-                    #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = False), use_column_width=True)
-                except:
-                    st.write(f"Plot {i} konnte nicht erstellt werden!")
+            PLOTS = st.multiselect(
+                    label = "AUSWAHL_PLOTS", 
+                    options = ["auc", "threshold", "pr", "confusion_matrix", "error", "class_report", "boundary", "rfe", "learning", "manifold", "calibration", "vc", "dimension", "feature", "lift", "gain", "tree"], 
+                    default = ["confusion_matrix", "class_report", "auc"]
+                    )
+
+            # Plots 
+            col1, col2 = st.beta_columns(2)
+            with col1:
+                st.markdown("### Ergebnisse TRAININGS-Datensatz")
+                for i in PLOTS:
+                    try:
+                        st.markdown(f"#### {i}")
+                        pcc.plot_model(trained_classification_model(), i ,use_train_data = True, display_format="streamlit")
+                        #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = True), use_column_width=True)
+                    except:
+                        st.write(f"Plot {i} konnte nicht erstellt werden!")
+                        
+            with col2:
+                st.markdown("### Ergebnisse TEST-Datensatz") 
+                for i in PLOTS:
+                    try:
+                        st.markdown(f"#### {i}")
+                        pcc.plot_model(trained_classification_model(), i ,use_train_data = False, display_format="streamlit")
+                        #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = False), use_column_width=True)
+                    except:
+                        st.write(f"Plot {i} konnte nicht erstellt werden!")
+
 
     elif TYPE == "Regression":
         if st.button("Train Model"):
@@ -217,6 +236,20 @@ def main():
                 except:
                     st.write(f"Plot {i} konnte nicht erstellt werden!")
         
+
+    st.write("_______")
+    st.header("Explain trained Model")
+
+    with st.beta_expander("Explainer Settings"):
+        pass
+
+    EXPLAINER = dx.Explainer(
+        model = trained_classification_model(),
+        data = DATENSATZ,
+        y = DATENSATZ[TARGET],
+        model_type= TYPE)
+
+    
 
 if __name__ == "__main__":
     main()
