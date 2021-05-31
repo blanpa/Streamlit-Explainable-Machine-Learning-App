@@ -143,7 +143,7 @@ def main():
         import numpy as np
         neg, pos = np.bincount(DATENSATZ[TARGET])
         total = neg + pos
-        st.text('Instanzen: \n Gesamt: {}\n Positiv: {} ({:.2f}% von allen)\n'.format(total, pos, 100 * pos / total))
+        st.text('Instance: \n Total: {}\n Positiv: {} ({:.2f}% of all)\n'.format(total, pos, 100 * pos / total))
     except:
         pass
 
@@ -161,7 +161,7 @@ def main():
             SETUPCLASSIFICATION = pcc.setup(data = DATENSATZ, target = TARGET, silent = True, html = False)
             trained_classification_model()
 
-        with st.beta_expander("Scores"):
+        with st.beta_expander("Training Result"):
             try:
                 st.write(pcc.get_config("display_container")[1])
                 st.write(trained_classification_model())
