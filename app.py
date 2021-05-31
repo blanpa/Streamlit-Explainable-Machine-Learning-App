@@ -66,11 +66,10 @@ def sidebar_render_svg(svg):
     html = r'<img src="data:image/svg+xml;base64,%s"/>' % b64
     st.sidebar.write(html, unsafe_allow_html=True)
 
-
-
 sidebar_render_svg("media/logo.svg")
 
-BREITE = st.sidebar.slider(label ="Display-size", min_value = 300, max_value=3000, value = 1400, step= 100)
+with st.sidebar.beta_expander("Settings"):
+    BREITE = st.slider(label ="Display-size", min_value = 300, max_value=3000, value = 1400, step= 100)
 
 st.markdown(
     f"""
