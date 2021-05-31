@@ -49,7 +49,7 @@ def upload_data(file):
 ################################################
 st.set_page_config(
     page_title="Explainable-ml-app",
-    #page_icon = "",
+    page_icon = "media/Icon.ico",
     layout="wide",
     initial_sidebar_state="expanded")
 
@@ -57,7 +57,19 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 st.set_option('deprecation.showfileUploaderEncoding', False)
 
 
-st.sidebar.header("Explainable-ml-app")
+def sidebar_render_svg(svg):
+    """Renders the given svg string."""
+    f = open(svg,"r")
+    lines = f.readlines()
+    line_string=''.join(lines)
+    b64 = base64.b64encode(line_string.encode('utf-8')).decode("utf-8")
+    html = r'<img src="data:image/svg+xml;base64,%s"/>' % b64
+    st.sidebar.write(html, unsafe_allow_html=True)
+
+
+
+sidebar_render_svg("media/logo.svg")
+
 BREITE = st.sidebar.slider(label ="Display-size", min_value = 300, max_value=3000, value = 1400, step= 100)
 
 st.markdown(
@@ -68,9 +80,6 @@ st.markdown(
     }}
     </style>
     """,unsafe_allow_html=True)
-
-
-
 
 
 def main():
