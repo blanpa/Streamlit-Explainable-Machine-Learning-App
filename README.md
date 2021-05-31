@@ -1,4 +1,4 @@
-# Explainable-ml-app
+# Explainable-Machine-Learning-App
 
 App for training and explanation of machine learning models with tabular data.
 
