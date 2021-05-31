@@ -2,7 +2,7 @@
 
 App for training and explanation of machine learning models with tabular data.
 
-Build with Streamlit, Pycaret & Dalex.
+Build with Streamlit, PyCaret & Dalex.
 
 Try:
     https://explainablemlapp.herokuapp.com/
