@@ -6123,3 +6123,233 @@ qda       Quadratic Discriminant Analysis    0.4159  0.5150  0.8741  0.3712  0.5
                 solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
 2021-05-31 22:40:10,821:INFO:Checking exceptions
 2021-05-31 22:40:10,824:INFO:Preparing display monitor
+2021-05-31 22:40:10,826:INFO:Preloading libraries
+2021-05-31 22:40:10,829:INFO:Copying training dataset
+2021-05-31 22:40:10,832:INFO:Copying test dataset
+2021-05-31 22:40:10,836:INFO:Plot type: confusion_matrix
+2021-05-31 22:40:10,841:INFO:Fitting Model
+2021-05-31 22:40:10,843:INFO:Scoring test/hold-out set
+2021-05-31 22:40:11,324:INFO:Visual Rendered Successfully
+2021-05-31 22:40:11,522:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:40:11,527:INFO:Initializing plot_model()
+2021-05-31 22:40:11,528:INFO:plot_model(plot=class_report, fold=None, use_train_data=True, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:40:11,529:INFO:Checking exceptions
+2021-05-31 22:40:11,531:INFO:Preparing display monitor
+2021-05-31 22:40:11,531:INFO:Preloading libraries
+2021-05-31 22:40:11,532:INFO:Copying training dataset
+2021-05-31 22:40:11,534:INFO:Copying test dataset
+2021-05-31 22:40:11,535:INFO:Plot type: class_report
+2021-05-31 22:40:11,537:INFO:Fitting Model
+2021-05-31 22:40:11,540:INFO:Scoring test/hold-out set
+2021-05-31 22:40:11,930:INFO:Visual Rendered Successfully
+2021-05-31 22:40:12,097:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:40:12,103:INFO:Initializing plot_model()
+2021-05-31 22:40:12,104:INFO:plot_model(plot=auc, fold=None, use_train_data=True, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:40:12,105:INFO:Checking exceptions
+2021-05-31 22:40:12,114:INFO:Initializing plot_model()
+2021-05-31 22:40:12,115:INFO:plot_model(plot=confusion_matrix, fold=None, use_train_data=False, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:40:12,116:INFO:Checking exceptions
+2021-05-31 22:40:12,118:INFO:Preparing display monitor
+2021-05-31 22:40:12,120:INFO:Preloading libraries
+2021-05-31 22:40:12,125:INFO:Copying training dataset
+2021-05-31 22:40:12,128:INFO:Copying test dataset
+2021-05-31 22:40:12,129:INFO:Plot type: confusion_matrix
+2021-05-31 22:40:12,133:INFO:Fitting Model
+2021-05-31 22:40:12,135:INFO:Scoring test/hold-out set
+2021-05-31 22:40:12,566:INFO:Visual Rendered Successfully
+2021-05-31 22:40:12,729:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:40:12,736:INFO:Initializing plot_model()
+2021-05-31 22:40:12,736:INFO:plot_model(plot=class_report, fold=None, use_train_data=False, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:40:12,738:INFO:Checking exceptions
+2021-05-31 22:40:12,740:INFO:Preparing display monitor
+2021-05-31 22:40:12,741:INFO:Preloading libraries
+2021-05-31 22:40:12,743:INFO:Copying training dataset
+2021-05-31 22:40:12,747:INFO:Copying test dataset
+2021-05-31 22:40:12,748:INFO:Plot type: class_report
+2021-05-31 22:40:12,750:INFO:Fitting Model
+2021-05-31 22:40:12,751:INFO:Scoring test/hold-out set
+2021-05-31 22:40:13,114:INFO:Visual Rendered Successfully
+2021-05-31 22:40:13,263:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:40:13,267:INFO:Initializing plot_model()
+2021-05-31 22:40:13,268:INFO:plot_model(plot=auc, fold=None, use_train_data=False, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:40:13,269:INFO:Checking exceptions
+2021-05-31 22:41:01,943:INFO:Initializing get_config()
+2021-05-31 22:41:01,948:INFO:get_config(variable=display_container)
+2021-05-31 22:41:01,978:INFO:Global variable: display_container returned as [<pandas.io.formats.style.Styler object at 0x000002CB1F7BC670>,                                     Model  Accuracy     AUC  Recall   Prec.      F1   Kappa     MCC  TT (Sec)
+ridge                    Ridge Classifier    0.8490  0.0000  0.7605  0.8181  0.7815  0.6677  0.6749     0.034
+catboost              CatBoost Classifier    0.8428  0.8768  0.6591  0.8828  0.7474  0.6385  0.6577     2.913
+rf               Random Forest Classifier    0.8426  0.8612  0.6812  0.8613  0.7542  0.6422  0.6566     0.169
+lr                    Logistic Regression    0.8394  0.8818  0.7249  0.8196  0.7609  0.6421  0.6515     1.038
+ada                  Ada Boost Classifier    0.8331  0.8700  0.6717  0.8433  0.7399  0.6209  0.6348     0.114
+gbc          Gradient Boosting Classifier    0.8316  0.8847  0.6411  0.8694  0.7285  0.6123  0.6335     0.248
+et                 Extra Trees Classifier    0.8282  0.8702  0.6765  0.8211  0.7342  0.6109  0.6224     0.179
+dt               Decision Tree Classifier    0.8281  0.8023  0.7073  0.8027  0.7449  0.6174  0.6264     0.031
+lightgbm  Light Gradient Boosting Machine    0.8088  0.8389  0.6852  0.7642  0.7185  0.5755  0.5807     0.335
+xgboost         Extreme Gradient Boosting    0.7960  0.8373  0.7071  0.7280  0.7103  0.5544  0.5603     1.073
+knn                K Neighbors Classifier    0.6726  0.6968  0.4271  0.5660  0.4820  0.2515  0.2590     0.059
+svm                   SVM - Linear Kernel    0.6552  0.0000  0.6796  0.6378  0.5675  0.3113  0.3598     0.037
+lda          Linear Discriminant Analysis    0.5265  0.5227  0.5160  0.3858  0.4401  0.0462  0.0463     0.131
+nb                            Naive Bayes    0.4381  0.5353  0.8850  0.3799  0.5314  0.0535  0.0997     0.028
+qda       Quadratic Discriminant Analysis    0.4159  0.5150  0.8741  0.3712  0.5111  0.0254  0.0364     0.071]
+2021-05-31 22:41:01,982:INFO:get_config() succesfully completed......................................
+2021-05-31 22:41:01,998:INFO:Initializing plot_model()
+2021-05-31 22:41:01,999:INFO:plot_model(plot=confusion_matrix, fold=None, use_train_data=True, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:02,000:INFO:Checking exceptions
+2021-05-31 22:41:02,001:INFO:Preparing display monitor
+2021-05-31 22:41:02,002:INFO:Preloading libraries
+2021-05-31 22:41:02,002:INFO:Copying training dataset
+2021-05-31 22:41:02,004:INFO:Copying test dataset
+2021-05-31 22:41:02,007:INFO:Plot type: confusion_matrix
+2021-05-31 22:41:02,010:INFO:Fitting Model
+2021-05-31 22:41:02,014:INFO:Scoring test/hold-out set
+2021-05-31 22:41:02,443:INFO:Visual Rendered Successfully
+2021-05-31 22:41:02,602:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:41:02,610:INFO:Initializing plot_model()
+2021-05-31 22:41:02,611:INFO:plot_model(plot=class_report, fold=None, use_train_data=True, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:02,613:INFO:Checking exceptions
+2021-05-31 22:41:02,615:INFO:Preparing display monitor
+2021-05-31 22:41:02,616:INFO:Preloading libraries
+2021-05-31 22:41:02,617:INFO:Copying training dataset
+2021-05-31 22:41:02,619:INFO:Copying test dataset
+2021-05-31 22:41:02,620:INFO:Plot type: class_report
+2021-05-31 22:41:02,622:INFO:Fitting Model
+2021-05-31 22:41:02,624:INFO:Scoring test/hold-out set
+2021-05-31 22:41:03,034:INFO:Visual Rendered Successfully
+2021-05-31 22:41:03,241:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:41:03,246:INFO:Initializing plot_model()
+2021-05-31 22:41:03,247:INFO:plot_model(plot=auc, fold=None, use_train_data=True, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:03,248:INFO:Checking exceptions
+2021-05-31 22:41:03,256:INFO:Initializing plot_model()
+2021-05-31 22:41:03,258:INFO:plot_model(plot=confusion_matrix, fold=None, use_train_data=False, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:03,260:INFO:Checking exceptions
+2021-05-31 22:41:03,262:INFO:Preparing display monitor
+2021-05-31 22:41:03,264:INFO:Preloading libraries
+2021-05-31 22:41:03,265:INFO:Copying training dataset
+2021-05-31 22:41:03,267:INFO:Copying test dataset
+2021-05-31 22:41:03,269:INFO:Plot type: confusion_matrix
+2021-05-31 22:41:03,272:INFO:Fitting Model
+2021-05-31 22:41:03,273:INFO:Scoring test/hold-out set
+2021-05-31 22:41:03,808:INFO:Visual Rendered Successfully
+2021-05-31 22:41:03,970:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:41:03,977:INFO:Initializing plot_model()
+2021-05-31 22:41:03,978:INFO:plot_model(plot=class_report, fold=None, use_train_data=False, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:03,979:INFO:Checking exceptions
+2021-05-31 22:41:03,980:INFO:Preparing display monitor
+2021-05-31 22:41:03,981:INFO:Preloading libraries
+2021-05-31 22:41:03,982:INFO:Copying training dataset
+2021-05-31 22:41:03,985:INFO:Copying test dataset
+2021-05-31 22:41:03,986:INFO:Plot type: class_report
+2021-05-31 22:41:03,989:INFO:Fitting Model
+2021-05-31 22:41:03,992:INFO:Scoring test/hold-out set
+2021-05-31 22:41:04,635:INFO:Visual Rendered Successfully
+2021-05-31 22:41:04,840:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:41:04,846:INFO:Initializing plot_model()
+2021-05-31 22:41:04,847:INFO:plot_model(plot=auc, fold=None, use_train_data=False, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:04,848:INFO:Checking exceptions
+2021-05-31 22:41:07,241:INFO:Initializing get_config()
+2021-05-31 22:41:07,255:INFO:get_config(variable=display_container)
+2021-05-31 22:41:07,301:INFO:Global variable: display_container returned as [<pandas.io.formats.style.Styler object at 0x000002CB1F7BC670>,                                     Model  Accuracy     AUC  Recall   Prec.      F1   Kappa     MCC  TT (Sec)
+ridge                    Ridge Classifier    0.8490  0.0000  0.7605  0.8181  0.7815  0.6677  0.6749     0.034
+catboost              CatBoost Classifier    0.8428  0.8768  0.6591  0.8828  0.7474  0.6385  0.6577     2.913
+rf               Random Forest Classifier    0.8426  0.8612  0.6812  0.8613  0.7542  0.6422  0.6566     0.169
+lr                    Logistic Regression    0.8394  0.8818  0.7249  0.8196  0.7609  0.6421  0.6515     1.038
+ada                  Ada Boost Classifier    0.8331  0.8700  0.6717  0.8433  0.7399  0.6209  0.6348     0.114
+gbc          Gradient Boosting Classifier    0.8316  0.8847  0.6411  0.8694  0.7285  0.6123  0.6335     0.248
+et                 Extra Trees Classifier    0.8282  0.8702  0.6765  0.8211  0.7342  0.6109  0.6224     0.179
+dt               Decision Tree Classifier    0.8281  0.8023  0.7073  0.8027  0.7449  0.6174  0.6264     0.031
+lightgbm  Light Gradient Boosting Machine    0.8088  0.8389  0.6852  0.7642  0.7185  0.5755  0.5807     0.335
+xgboost         Extreme Gradient Boosting    0.7960  0.8373  0.7071  0.7280  0.7103  0.5544  0.5603     1.073
+knn                K Neighbors Classifier    0.6726  0.6968  0.4271  0.5660  0.4820  0.2515  0.2590     0.059
+svm                   SVM - Linear Kernel    0.6552  0.0000  0.6796  0.6378  0.5675  0.3113  0.3598     0.037
+lda          Linear Discriminant Analysis    0.5265  0.5227  0.5160  0.3858  0.4401  0.0462  0.0463     0.131
+nb                            Naive Bayes    0.4381  0.5353  0.8850  0.3799  0.5314  0.0535  0.0997     0.028
+qda       Quadratic Discriminant Analysis    0.4159  0.5150  0.8741  0.3712  0.5111  0.0254  0.0364     0.071]
+2021-05-31 22:41:07,305:INFO:get_config() succesfully completed......................................
+2021-05-31 22:41:07,332:INFO:Initializing plot_model()
+2021-05-31 22:41:07,334:INFO:plot_model(plot=confusion_matrix, fold=None, use_train_data=True, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:07,335:INFO:Checking exceptions
+2021-05-31 22:41:07,338:INFO:Preparing display monitor
+2021-05-31 22:41:07,340:INFO:Preloading libraries
+2021-05-31 22:41:07,341:INFO:Copying training dataset
+2021-05-31 22:41:07,343:INFO:Copying test dataset
+2021-05-31 22:41:07,346:INFO:Plot type: confusion_matrix
+2021-05-31 22:41:07,350:INFO:Fitting Model
+2021-05-31 22:41:07,351:INFO:Scoring test/hold-out set
+2021-05-31 22:41:07,838:INFO:Visual Rendered Successfully
+2021-05-31 22:41:08,000:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:41:08,005:INFO:Initializing plot_model()
+2021-05-31 22:41:08,006:INFO:plot_model(plot=class_report, fold=None, use_train_data=True, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:08,007:INFO:Checking exceptions
+2021-05-31 22:41:08,009:INFO:Preparing display monitor
+2021-05-31 22:41:08,009:INFO:Preloading libraries
+2021-05-31 22:41:08,010:INFO:Copying training dataset
+2021-05-31 22:41:08,012:INFO:Copying test dataset
+2021-05-31 22:41:08,014:INFO:Plot type: class_report
+2021-05-31 22:41:08,016:INFO:Fitting Model
+2021-05-31 22:41:08,017:INFO:Scoring test/hold-out set
+2021-05-31 22:41:08,551:INFO:Visual Rendered Successfully
+2021-05-31 22:41:08,733:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:41:08,737:INFO:Initializing plot_model()
+2021-05-31 22:41:08,738:INFO:plot_model(plot=auc, fold=None, use_train_data=True, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:08,739:INFO:Checking exceptions
+2021-05-31 22:41:08,745:INFO:Initializing plot_model()
+2021-05-31 22:41:08,746:INFO:plot_model(plot=confusion_matrix, fold=None, use_train_data=False, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:08,747:INFO:Checking exceptions
+2021-05-31 22:41:08,750:INFO:Preparing display monitor
+2021-05-31 22:41:08,751:INFO:Preloading libraries
+2021-05-31 22:41:08,752:INFO:Copying training dataset
+2021-05-31 22:41:08,754:INFO:Copying test dataset
+2021-05-31 22:41:08,756:INFO:Plot type: confusion_matrix
+2021-05-31 22:41:08,758:INFO:Fitting Model
+2021-05-31 22:41:08,759:INFO:Scoring test/hold-out set
+2021-05-31 22:41:09,208:INFO:Visual Rendered Successfully
+2021-05-31 22:41:09,423:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:41:09,428:INFO:Initializing plot_model()
+2021-05-31 22:41:09,430:INFO:plot_model(plot=class_report, fold=None, use_train_data=False, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:09,431:INFO:Checking exceptions
+2021-05-31 22:41:09,432:INFO:Preparing display monitor
+2021-05-31 22:41:09,433:INFO:Preloading libraries
+2021-05-31 22:41:09,434:INFO:Copying training dataset
+2021-05-31 22:41:09,436:INFO:Copying test dataset
+2021-05-31 22:41:09,437:INFO:Plot type: class_report
+2021-05-31 22:41:09,439:INFO:Fitting Model
+2021-05-31 22:41:09,439:INFO:Scoring test/hold-out set
+2021-05-31 22:41:10,061:INFO:Visual Rendered Successfully
+2021-05-31 22:41:10,252:INFO:plot_model() succesfully completed......................................
+2021-05-31 22:41:10,258:INFO:Initializing plot_model()
+2021-05-31 22:41:10,259:INFO:plot_model(plot=auc, fold=None, use_train_data=False, verbose=True, is_in_evaluate=False, display=None, display_format=streamlit, estimator=RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+                max_iter=None, normalize=False, random_state=2718,
+                solver='auto', tol=0.001), feature_name=None, fit_kwargs=None, groups=None, label=False, save=False, scale=1, system=True)
+2021-05-31 22:41:10,260:INFO:Checking exceptions
