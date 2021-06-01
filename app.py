@@ -21,7 +21,6 @@ import sqlalchemy as sqla
 # ml
 from sklearn.metrics import classification_report, confusion_matrix
 import imblearn
-
 import pycaret.classification as pcc
 import pycaret.regression as pcr
 from pycaret.datasets import get_data
@@ -147,16 +146,24 @@ def main():
     except:
         pass
 
+
+
     with st.beta_expander("Settings"):
-        pass
+        form = st.form(key='my_form')
+        form.text_input(label='Enter some text')
+
+    submit_button = form.form_submit_button(label='Submit')
+
 
     if TYPE == "Classification":
         MODELS = [" ", "lr", "knn", "nb", "dt", "svm", "rbfsvm", "gpc", "mlp", "ridge", "rf", "qda", "ada", "gbc", "lda", "et", "xgboost", "lightgbm", "catboost"]
+        
         MODEL_LIST = st.multiselect(
             label = "models", 
             options = MODELS, 
             default = ["lr", "knn", "nb", "dt", "svm", "rbfsvm", "gpc", "mlp", "ridge", "rf", "qda", "ada", "gbc", "lda", "et", "xgboost", "lightgbm", "catboost"] )
 
+        submit_button = st.form_submit_button(label='Submit')
         if st.button("Train Model"):
             SETUPCLASSIFICATION = pcc.setup(data = DATENSATZ, target = TARGET, silent = True, html = False)
             trained_classification_model()
