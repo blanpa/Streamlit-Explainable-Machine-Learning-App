@@ -2,3 +2,6 @@ streamlit-nightly
 streamlit-pandas-profiling
 dalex
 pycaret
+xgboost
+catboost
+lightgbm
