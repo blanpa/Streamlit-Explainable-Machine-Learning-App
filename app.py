@@ -90,7 +90,7 @@ sidebar_render_svg("media/logo.svg")
 ################################################
 def main():
     TYPE = st.sidebar.selectbox(label = "Type", options = [ "", "Classification", "Regression"])
-    st.header(TYPE)
+    st.write(f"# {TYPE}")
 
     if TYPE == "":
         st.write("# Explainable-Machine-Learning-App")
@@ -193,24 +193,22 @@ def main():
 
             classification_submit_button = st.form_submit_button(label='Train Model(s)')
 
-
-
         if classification_submit_button:
             BEST = pcc.compare_models(
                 include = MODELS_WAHL,
                 sort = SORT,
             )
 
+
         with st.beta_expander("Training Result"):
-            try:
-                st.write(pcc.get_config("display_container")[1])
-            except:
-                pass
+            st.write(pcc.get_config("display_container")[1])
+            st.write(BEST)
+
 
             PLOTS = st.multiselect(
                     label = "AUSWAHL_PLOTS", 
                     options = ["auc", "threshold", "pr", "confusion_matrix", "error", "class_report", "boundary", "rfe", "learning", "manifold", "calibration", "vc", "dimension", "feature", "lift", "gain", "tree"], 
-                    default = ["confusion_matrix", "auc"]
+                    default = ["confusion_matrix", "pr"]
                     )
 
             # Plots 
@@ -220,8 +218,7 @@ def main():
                 for i in PLOTS:
                     try:
                         st.markdown(f"#### {i}")
-                        pcc.plot_model(_BytesIO_to_bytes, i ,use_train_data = True, display_format="streamlit")
-                        #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = True), use_column_width=True)
+                        pcc.plot_model(BEST, i ,use_train_data = True, display_format="streamlit")
                     except:
                         st.write(f"Plot {i} konnte nicht erstellt werden!")
                         
@@ -231,7 +228,6 @@ def main():
                     try:
                         st.markdown(f"#### {i}")
                         pcc.plot_model(BEST, i ,use_train_data = False, display_format="streamlit")
-                        #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = False), use_column_width=True)
                     except:
                         st.write(f"Plot {i} konnte nicht erstellt werden!")
 
@@ -277,28 +273,24 @@ def main():
         
 
     st.header("Explain trained Model")
-    with st.beta_expander("Explainer Settings"):
-        pass
+    with st.form(key='Explain trained Model'):
+        ERKLÄRUNGEN = st.multiselect(
+            label="Auswahl",
+            options = ["predict_parts", "predict_profile", "predict_surrogate", "model_parts", "model_profile", "model_surrogate"],
+            #index = 3,
+            )
+        GRAFIK_WAHL = st.selectbox(label = "Darstellung der Erklärungen (Wenn möglich! Standartmäßig Grafiken)", options = ["Grafiken", "Tabellen"])
+        
+        ex_plain_submit_button = st.form_submit_button(label='Calculate Explainations')
 
-    EXPLAINER = dx.Explainer(
-        model = BEST,
-        data = DATENSATZ,
-        y = DATENSATZ[TARGET],
-        model_type= TYPE)
-
-
-    select_Erklärung = ["predict_parts", "predict_profile", "predict_surrogate", "model_parts", "model_profile", "model_surrogate"] 
-    ERKLÄRUNGEN = st.multiselect(
-        label="Auswahl",
-        options = select_Erklärung,
-        #index = 3,
-        )
-
-    GRAFIK_WAHL = st.selectbox(label = "Darstellung der Erklärungen (Wenn möglich! Standartmäßig Grafiken)", options = ["Grafiken", "Tabellen"])
+    with ex_plain_submit_button:
+        EXPLAINER = dx.Explainer(
+            model = BEST,
+            data = DATENSATZ,
+            y = DATENSATZ[TARGET],
+            model_type= TYPE)
 
     #Erkärungen neu berechnen
-    BUTTON_ERKLÄR = st.button(label = "Erklärungen berechnen lassen")
-
     my_bar_training_head=st.empty()
     my_bar_training_head.write("Fortschritt Plots")
     my_bar_training = st.empty()
