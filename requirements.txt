@@ -4,4 +4,4 @@ pylint
 altair
 dtreeviz
 dalex
-pycaret[full]
+pycaret-nightly
