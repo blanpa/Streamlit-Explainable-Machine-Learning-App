@@ -4,4 +4,6 @@ COPY . .
 
 RUN pip3 install --trusted-host pypi.python.org -r requirements.txt
 
-CMD streamlit run app.py --server.port 8501 --server.enableXsrfProtection=false
+
+#CMD streamlit run app.py --server.port 8501 --server.enableXsrfProtection=false
+CMD ["sh", "-c", "streamlit run --server.port $PORT app.py"]
