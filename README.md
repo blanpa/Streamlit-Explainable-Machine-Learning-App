@@ -1,4 +1,4 @@
-![GitHub Logo](/media/logo.svg)
+![GitHub Logo](/media/EXAIapp.svg)
 
 # Explainable-Machine-Learning-App
 
