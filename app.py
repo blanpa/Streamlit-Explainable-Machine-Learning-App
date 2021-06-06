@@ -22,6 +22,7 @@ import sqlalchemy as sqla
 # ml
 from sklearn.metrics import classification_report, confusion_matrix
 import imblearn
+import pycaret as pc
 import pycaret.classification as pcc
 import pycaret.regression as pcr
 from pycaret.datasets import get_data
@@ -76,10 +77,11 @@ def sidebar_render_svg(svg):
     st.sidebar.write(html, unsafe_allow_html=True)
 
 sidebar_render_svg("media/logo.svg")
-
-st.sidebar.write("# Explainable-Machine-Learning-App")
-st.sidebar.write("Build with PyCaret & Dalex")
+st.sidebar.write("Build with Streamlit, PyCaret & Dalex")
 st.sidebar.info("Big Datasets cause slow behavior of the application")
+st.sidebar.write("Streamlit: ", st.__version__)
+st.sidebar.write("PyCaret: ", pc.__version__)
+st.sidebar.write("Dalex: ", dx.__version__)
 
 def upload_data(file):
     DF = pd.read_csv(file, encoding='utf-8')
