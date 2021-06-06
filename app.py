@@ -25,7 +25,6 @@ import imblearn
 import pycaret.classification as pcc
 import pycaret.regression as pcr
 from pycaret.datasets import get_data
-import featuretools as ft
 
 # plotting
 import matplotlib.pyplot as plt
