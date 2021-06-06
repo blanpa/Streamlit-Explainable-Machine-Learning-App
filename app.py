@@ -190,7 +190,6 @@ def main():
         st.header("Train Model")
         
         MODELS = ["lr", "knn", "nb", "dt", "svm", "rbfsvm", "gpc", "mlp", "ridge", "rf", "qda", "ada", "gbc", "lda", "et", "xgboost", "lightgbm", "catboost"]
-
         with st.form(key='Train_classification_Model'):
             MODELS_WAHL = st.multiselect(
                 label = "models", 
@@ -216,10 +215,6 @@ def main():
                 pcc.save_model(model = BEST, model_name="Model/modelpipeline", model_only =False)
 
         try:
-            if len(MODELS_WAHL) > 1:
-                NUMBER = 1
-            else:
-                NUMBER = 2
             display_container1 = pcc.get_config("display_container")[1]
             MODEL = pcc.load_model(model_name="Model/model")
             MODELPIPELINE = pcc.load_model(model_name="Model/modelpipeline")
