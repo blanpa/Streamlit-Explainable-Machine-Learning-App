@@ -166,7 +166,7 @@ def main():
                 SETUPCLASSIFICATION = pcc.setup(
                     data = DATENSATZ, 
                     target = TARGET, 
-                    silent = True, 
+                    silent = True,
                     html = False,
 
                     train_size = train_size,
