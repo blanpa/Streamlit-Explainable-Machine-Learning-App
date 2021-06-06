@@ -38,13 +38,6 @@ from pandas_profiling import ProfileReport
 # Interpretation
 import dalex as dx
 
-# #Redis
-# import redis
-# from redis_namespace import StrictRedis
-
-def upload_data(file):
-    DF = pd.read_csv(file, encoding='utf-8')
-  
   
 ################################################
 # Site Startup
@@ -85,24 +78,33 @@ def sidebar_render_svg(svg):
 
 sidebar_render_svg("media/logo.svg")
 
+st.sidebar.write("# Explainable-Machine-Learning-App")
+st.sidebar.write("Build with PyCaret & Dalex")
+st.sidebar.info("Big Datasets cause slow behavior of the application")
+
+def upload_data(file):
+    DF = pd.read_csv(file, encoding='utf-8')
+
+def plot_model(MODEL, PLOTS, use_train_data ):
+    for i in PLOTS:
+        try:
+            st.markdown(f"#### {i}")
+            pcc.plot_model(MODEL, i ,use_train_data = use_train_data, display_format="streamlit")
+        except:
+            st.write(f"Plot {i} konnte nicht erstellt werden!")
+
 ################################################
 # Main
 ################################################
 def main():
-    TYPE = st.sidebar.selectbox(label = "Type", options = [ "", "Classification", "Regression"])
+    TYPE = st.sidebar.selectbox(label = "Type", options = ["Classification", "Regression"])
     st.write(f"# {TYPE}")
-
-    if TYPE == "":
-        st.write("# Explainable-Machine-Learning-App")
-        st.write("Build with PyCaret & Dalex")
-        st.write("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam")
-        st.stop()
 
     DATA = st.sidebar.selectbox(label = "Data", options = ["Dummydata", "CSV-File"])
 
     if DATA == "Dummydata":
         INDEX = get_data("index")
-        AUSWAHL = st.sidebar.selectbox(label = "Dataset", options = [""] + INDEX.Dataset.tolist())
+        AUSWAHL = st.sidebar.selectbox(label = "Dataset", options = INDEX.Dataset.tolist(), index = 21)
 
         if AUSWAHL == "":
             st.dataframe(INDEX, height=3000)
@@ -168,42 +170,65 @@ def main():
 
                     train_size = train_size,
                     normalize = normalize
-                    
                     )
+                pcc.save_config(file_name = 'config/classification_config.pkl')
+        
+        #SETUPCLASSIFICATION = pcc.load_config(file_name = 'config/classification_config.pkl')
+        #st.write(SETUPCLASSIFICATION)
 
-        with st.beta_expander(label = "Setup Result"):
-            st.write("Setup")
-            st.write(pcc.get_config("display_container")[0])
-            st.write("Traindata")
-            st.write(pd.concat([pcc.get_config("X_train"),pcc.get_config("y_train")], axis=1, join='inner'))
-            st.write("Testdata")
-            st.write(pd.concat([pcc.get_config("X_test"),pcc.get_config("y_test")], axis=1, join='inner'))
+        try:
+            with st.beta_expander(label = "Setup Result"):
+                st.write("Setup")
+                st.write(pcc.get_config("display_container")[0])
+                st.write("Traindata")
+                st.write(pd.concat([pcc.get_config("X_train"),pcc.get_config("y_train")], axis=1, join='inner'))
+                st.write("Testdata")
+                st.write(pd.concat([pcc.get_config("X_test"),pcc.get_config("y_test")], axis=1, join='inner'))
+        except:
+            st.stop()
 
         # Model
         st.header("Train Model")
         
-        MODELS = [" ", "lr", "knn", "nb", "dt", "svm", "rbfsvm", "gpc", "mlp", "ridge", "rf", "qda", "ada", "gbc", "lda", "et", "xgboost", "lightgbm", "catboost"]
+        MODELS = ["lr", "knn", "nb", "dt", "svm", "rbfsvm", "gpc", "mlp", "ridge", "rf", "qda", "ada", "gbc", "lda", "et", "xgboost", "lightgbm", "catboost"]
 
         with st.form(key='Train_classification_Model'):
             MODELS_WAHL = st.multiselect(
                 label = "models", 
                 options = MODELS,
-                default = MODELS[1:])
+                default = MODELS)
             SORT = st.selectbox(label = "sort", options = ["Accuracy", "AUC", "Recall", "Prec.", "F1"])
 
             classification_submit_button = st.form_submit_button(label='Train Model(s)')
 
         if classification_submit_button:
-            BEST = pcc.compare_models(
-                include = MODELS_WAHL,
-                sort = SORT,
-            )
+            with st.spinner("Train Model(s)"):
+                if len(MODELS_WAHL) > 1:
+                    BEST = pcc.compare_models(
+                        include = MODELS_WAHL,
+                        sort = SORT,
+                        )
+                else:
+                    BEST = pcc.create_model(
+                        estimator = MODELS_WAHL[0]
+                        )
 
+                pcc.save_model(model = BEST, model_name="Model/model", model_only =True)
+                pcc.save_model(model = BEST, model_name="Model/modelpipeline", model_only =False)
+
+        try:
+            if len(MODELS_WAHL) > 1:
+                NUMBER = 1
+            else:
+                NUMBER = 2
+            display_container1 = pcc.get_config("display_container")[1]
+            MODEL = pcc.load_model(model_name="Model/model")
+            MODELPIPELINE = pcc.load_model(model_name="Model/modelpipeline")
+        except:
+            st.stop()
 
         with st.beta_expander("Training Result"):
-            st.write(pcc.get_config("display_container")[1])
-            st.write(BEST)
-
+            st.write(display_container1)
 
             PLOTS = st.multiselect(
                     label = "AUSWAHL_PLOTS", 
@@ -215,21 +240,12 @@ def main():
             col1, col2 = st.beta_columns(2)
             with col1:
                 st.markdown("### Ergebnisse TRAININGS-Datensatz")
-                for i in PLOTS:
-                    try:
-                        st.markdown(f"#### {i}")
-                        pcc.plot_model(BEST, i ,use_train_data = True, display_format="streamlit")
-                    except:
-                        st.write(f"Plot {i} konnte nicht erstellt werden!")
+                plot_model(MODEL, PLOTS, True)
                         
             with col2:
                 st.markdown("### Ergebnisse TEST-Datensatz") 
-                for i in PLOTS:
-                    try:
-                        st.markdown(f"#### {i}")
-                        pcc.plot_model(BEST, i ,use_train_data = False, display_format="streamlit")
-                    except:
-                        st.write(f"Plot {i} konnte nicht erstellt werden!")
+                plot_model(MODEL, PLOTS, False)
+
 
 
     elif TYPE == "Regression":
@@ -250,26 +266,13 @@ def main():
             )
 
         col1, col2 = st.beta_columns(2)
-
         with col1:
             st.markdown("### Ergebnisse TRAININGS-Datensatz")
-            for i in PLOTS:
-                try:
-                    st.markdown(f"#### {i}")
-                    pcc.plot_model(BEST, i ,use_train_data = True, display_format="streamlit")
-                    #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = True), use_column_width=True)
-                except:
-                    st.write(f"Plot {i} konnte nicht erstellt werden!")
+            plot_model(MODEL, PLOTS, True)
                     
         with col2:
             st.markdown("### Ergebnisse TEST-Datensatz") 
-            for i in PLOTS:
-                try:
-                    st.markdown(f"#### {i}")
-                    pcc.plot_model(BEST, i ,use_train_data = False, display_format="streamlit")
-                    #st.image(pyc.plot_model(LOAD_REDIS("pycaretmodel"), i , save= True, use_train_data = False), use_column_width=True)
-                except:
-                    st.write(f"Plot {i} konnte nicht erstellt werden!")
+            plot_model(MODEL, PLOTS, False)
         
 
     st.header("Explain trained Model")
@@ -277,18 +280,25 @@ def main():
         ERKLÄRUNGEN = st.multiselect(
             label="Auswahl",
             options = ["predict_parts", "predict_profile", "predict_surrogate", "model_parts", "model_profile", "model_surrogate"],
-            #index = 3,
             )
         GRAFIK_WAHL = st.selectbox(label = "Darstellung der Erklärungen (Wenn möglich! Standartmäßig Grafiken)", options = ["Grafiken", "Tabellen"])
         
         ex_plain_submit_button = st.form_submit_button(label='Calculate Explainations')
 
-    with ex_plain_submit_button:
+    if ex_plain_submit_button:
         EXPLAINER = dx.Explainer(
-            model = BEST,
+            model = MODEL,
             data = DATENSATZ,
             y = DATENSATZ[TARGET],
             model_type= TYPE)
+
+        with open('explainer/explainer.pkl', 'wb') as fd:
+            EXPLAINER.dump(fd)
+
+
+    with open('explainer/explainer.pkl', 'rb') as fd:
+        EXPLAINER = dx.Explainer.load(fd)
+    
 
     #Erkärungen neu berechnen
     my_bar_training_head=st.empty()
