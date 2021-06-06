@@ -1,3 +1,5 @@
+![GitHub Logo](/media/EXAIapp.svg)
+
 # Explainable-Machine-Learning-App
 
 App for training and explanation of machine learning models with tabular data.
