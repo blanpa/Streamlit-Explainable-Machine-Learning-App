@@ -51,7 +51,7 @@ st.set_page_config(
 st.set_option('deprecation.showPyplotGlobalUse', False)
 st.set_option('deprecation.showfileUploaderEncoding', False)
 
-# with st.sidebar.beta_expander("Settings"):
+# with st.sidebar.expander("Settings"):
 #     BREITE = st.slider(label ="Display-size", min_value = 300, max_value=3000, value = 1400, step= 100)
 
 # st.markdown(
@@ -128,7 +128,7 @@ def main():
     PANDASPR = st.checkbox(label ="show data report", value = False)
 
     if PANDASPR == True:
-        with st.beta_expander("Data Report"):
+        with st.expander("Data Report"):
             import streamlit.components.v1 as components
             components.html(html=ProfileReport(df = DATENSATZ, minimal = False).to_html(), scrolling = True, height = 1000)
 
@@ -142,7 +142,7 @@ def main():
     if TARGET == " ":
         st.stop()
 
-    col1, _ = st.beta_columns(2)
+    col1, _ = st.columns(2)
     try:
         with col1:
             st.bar_chart(DATENSATZ[TARGET].value_counts())
@@ -178,9 +178,10 @@ def main():
         #st.write(SETUPCLASSIFICATION)
 
         try:
-            with st.beta_expander(label = "Setup Result"):
+            with st.expander(label = "Setup Result"):
                 st.write("Setup")
-                st.write(pcc.get_config("display_container")[0])
+                import streamlit.components.v1 as components
+                components.html(pcc.get_config("display_container")[0].to_html(), scrolling = True)
                 st.write("Traindata")
                 st.write(pd.concat([pcc.get_config("X_train"),pcc.get_config("y_train")], axis=1, join='inner'))
                 st.write("Testdata")
@@ -223,7 +224,7 @@ def main():
         except:
             st.stop()
 
-        with st.beta_expander("Training Result"):
+        with st.expander("Training Result"):
             st.write(display_container1)
 
             PLOTS = st.multiselect(
@@ -233,7 +234,7 @@ def main():
                     )
 
             # Plots 
-            col1, col2 = st.beta_columns(2)
+            col1, col2 = st.columns(2)
             with col1:
                 st.markdown("### Ergebnisse TRAININGS-Datensatz")
                 plot_model(MODEL, PLOTS, True)
@@ -261,7 +262,7 @@ def main():
             default = ["residuals_interactive", "residuals", "error"]
             )
 
-        col1, col2 = st.beta_columns(2)
+        col1, col2 = st.columns(2)
         with col1:
             st.markdown("### Ergebnisse TRAININGS-Datensatz")
             plot_model(MODEL, PLOTS, True)
@@ -328,7 +329,7 @@ def main():
 
     if "predict_parts" in LOAD_REDIS("Auswahl_Erklärung"):
 
-        with st.beta_expander(label="predict_parts - Break Down, Shap", expanded=True):
+        with st.expander(label="predict_parts - Break Down, Shap", expanded=True):
             
             predict_parts_type = st.selectbox(label = "type", options = ["break_down", "break_down_interactions", "shap", "shap_wrapper"]) #"break_down_interactions" "shap_wrapper"
 
@@ -374,7 +375,7 @@ def main():
     my_bar_training.progress(20)
 
     if "predict_profile" in LOAD_REDIS("Auswahl_Erklärung"):
-        with st.beta_expander(label="predict_profile - Ceteris Paribus", expanded=True):
+        with st.expander(label="predict_profile - Ceteris Paribus", expanded=True):
 
             display_info("Interpretation","Break_down_Attributions") # Information Einblenden
             
@@ -410,7 +411,7 @@ def main():
     my_bar_training.progress(30)
 
     if "predict_surrogate" in LOAD_REDIS("Auswahl_Erklärung"):
-        with st.beta_expander(label="predict_surrogate - Lime", expanded=True):
+        with st.expander(label="predict_surrogate - Lime", expanded=True):
 
             #Lime plotten
             if LOAD_REDIS("BUTTON_ERKLÄR"):
@@ -448,7 +449,7 @@ def main():
     my_bar_training.progress(40)
 
     if "model_parts" in LOAD_REDIS("Auswahl_Erklärung"):
-        with st.beta_expander(label="model_parts - Permutationsbasierte Merkmalswichtigkeit, Shap Summary", expanded=True):
+        with st.expander(label="model_parts - Permutationsbasierte Merkmalswichtigkeit, Shap Summary", expanded=True):
             
             #model_parts_type = st.selectbox(label = "Type", options = ["variable_importance"]) # "ratio", "difference"
 
@@ -491,7 +492,7 @@ def main():
     my_bar_training.progress(50)
 
     if "model_profile" in LOAD_REDIS("Auswahl_Erklärung"):
-        with st.beta_expander(label="model_profile - Partiellen Abhängigkeitskurven", expanded=True):
+        with st.expander(label="model_profile - Partiellen Abhängigkeitskurven", expanded=True):
             
             # pdp plots
             model_profile_var = st.multiselect(label = "model_profile_var", options = COLUMNS, default=COLUMNS[0])
@@ -522,7 +523,7 @@ def main():
     my_bar_training.progress(60)
 
     if "model_surrogate" in LOAD_REDIS("Auswahl_Erklärung"):
-        with st.beta_expander(label="model_surrogate - Lime Entscheidungsbaum", expanded=True):
+        with st.expander(label="model_surrogate - Lime Entscheidungsbaum", expanded=True):
 
             MAX_VARS = st.number_input(label= "max_vars", value = 5)
             MAX_DEPTH = st.number_input(label="max_depth", value = 3)
