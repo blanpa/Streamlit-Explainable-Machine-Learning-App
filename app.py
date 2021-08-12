@@ -48,8 +48,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded")
 
-st.set_option('deprecation.showPyplotGlobalUse', False)
-st.set_option('deprecation.showfileUploaderEncoding', False)
 
 # with st.sidebar.expander("Settings"):
 #     BREITE = st.slider(label ="Display-size", min_value = 300, max_value=3000, value = 1400, step= 100)
@@ -218,14 +216,14 @@ def main():
                 pcc.save_model(model = BEST, model_name="Model/modelpipeline", model_only =False)
 
         try:
-            display_container1 = pcc.get_config("display_container")[1]
+            display_container1 = pcc.get_config("display_container")
             MODEL = pcc.load_model(model_name="Model/model")
             MODELPIPELINE = pcc.load_model(model_name="Model/modelpipeline")
         except:
             st.stop()
 
         with st.expander("Training Result"):
-            st.write(display_container1)
+            st.dataframe(display_container1[1])
 
             PLOTS = st.multiselect(
                     label = "AUSWAHL_PLOTS", 
@@ -277,25 +275,60 @@ def main():
         ERKLÄRUNGEN = st.multiselect(
             label="Auswahl",
             options = ["predict_parts", "predict_profile", "predict_surrogate", "model_parts", "model_profile", "model_surrogate"],
+            default = ["predict_parts","predict_profile", "predict_surrogate", "model_parts", "model_profile", "model_surrogate"]
             )
-        GRAFIK_WAHL = st.selectbox(label = "Darstellung der Erklärungen (Wenn möglich! Standartmäßig Grafiken)", options = ["Grafiken", "Tabellen"])
+
+        if "predict_parts" in ERKLÄRUNGEN:
+            predict_parts_type = st.selectbox(label = "type_predict_parts", options = ["break_down", "break_down_interactions", "shap"]) #"break_down_interactions" "shap_wrapper"
+
+        if "predict_profile" in ERKLÄRUNGEN:
+            COLUMNS = pcc.get_config("X_test").columns
+            variable_type_model_profile_cat = st.multiselect(label = "variable_type_model_profile_cat", options = COLUMNS , default = COLUMNS[0])
+
+
+        if "predict_surrogate" in ERKLÄRUNGEN:
+            pass
         
+        if "model_parts" in ERKLÄRUNGEN:
+            pass
+
+        if "model_profile" in ERKLÄRUNGEN:
+            model_profile_var = st.multiselect(label = "model_profile_var", options = COLUMNS, default=COLUMNS[0])
+            variable_type_model_profile = st.selectbox(label = "variable_type_model_profile", options = ['numerical', 'categorical'])
+            #variable_type_model_profile_cat = st.multiselect(label = "variable_type_model_profile_cat", options =COLUMNS)
+
+        if "model_surrogate" in ERKLÄRUNGEN:
+            MAX_VARS = st.number_input(label= "max_vars", value = 5)
+            MAX_DEPTH = st.number_input(label="max_depth", value = 3)
+        
+        if any(item in ["predict_parts", "predict_profile", "predict_surrogate"] for item in ERKLÄRUNGEN) is True:
+            slider_idx = st.multiselect(label ="Instanz", options = pcc.get_config("X_test").index.values.tolist() , default = pcc.get_config("X_test").index.values[0])
+        
+        if any(item in ["model_parts", "model_profile", "model_surrogate"] for item in ERKLÄRUNGEN)is True:
+            pass
+
         ex_plain_submit_button = st.form_submit_button(label='Calculate Explainations')
 
     if ex_plain_submit_button:
+        if TYPE == "Classification":
+            TYPE_DALEX = "classification"
+        else:
+            TYPE_DALEX = "regression"
+
         EXPLAINER = dx.Explainer(
             model = MODEL,
-            data = DATENSATZ,
-            y = DATENSATZ[TARGET],
-            model_type= TYPE)
+            data = pcc.get_config("X_test"),
+            y = pcc.get_config("y_test"),
+            model_type= TYPE_DALEX)
 
         with open('explainer/explainer.pkl', 'wb') as fd:
             EXPLAINER.dump(fd)
 
-
     with open('explainer/explainer.pkl', 'rb') as fd:
         EXPLAINER = dx.Explainer.load(fd)
     
+    OPS = pcc.get_config("X_test")
+    LABELS = pcc.get_config("y_test")
 
     #Erkärungen neu berechnen
     my_bar_training_head=st.empty()
@@ -306,261 +339,151 @@ def main():
     my_bar_training.progress(10)
 
     # Instanzbasiert
-    if "predict_parts" or "predict_profile" or "predict_surrogate"  in ERKLÄRUNGEN:
+    if any(item in ["predict_parts", "predict_profile", "predict_surrogate"] for item in ERKLÄRUNGEN) is True:
     
-        st.subheader("Lokale Erklärungen")
+        st.subheader("Local Explainations")
 
-        st.write("Rohdaten")
-        try:
-            st.write(LOAD_REDIS("DF_VAL_SAUBER").loc[LOAD_REDIS("X_test").index].style.highlight_max(subset=LOAD_REDIS("target_col"), color='lightgreen').highlight_min(subset=LOAD_REDIS("target_col"),color='#cd4f39'))
-        except:
-            st.write(LOAD_REDIS("DF_SAUBER").loc[LOAD_REDIS("X_test").index].style.highlight_max(subset=LOAD_REDIS("target_col"), color='lightgreen').highlight_min(subset=LOAD_REDIS("target_col"),color='#cd4f39'))
-        
-        st.write("Verarbeitete Daten")
-        st.write(pd.concat([LOAD_REDIS("y_test"),LOAD_REDIS("X_test")], axis=1, join='inner').style.highlight_max(subset=LOAD_REDIS("target_col"), color='lightgreen').highlight_min(subset=LOAD_REDIS("target_col"),color='#cd4f39'))
-        
-
-        SAVE_REDIS(WERT = "slider_idx", INHALT = st.multiselect(label ="Instanz", options = LOAD_REDIS("X_test").index.values.tolist() , default = LOAD_REDIS("X_test").index.values[0]))
-        #LOAD_REDIS("slider_idx")
-
-        for i in LOAD_REDIS("slider_idx"):
+        for i in slider_idx:
             st.text(f"Instanz: {i} | Wahrscheinlichkeit des Modells: {EXPLAINER.predict(OPS.loc[[i]])[0]} | Vorhersage: {round(EXPLAINER.predict(OPS.loc[[i]])[0])} | Ist-Wert: {LABELS.loc[i]}")
             pass
 
-    if "predict_parts" in LOAD_REDIS("Auswahl_Erklärung"):
+        if "predict_parts" in ERKLÄRUNGEN:
 
-        with st.expander(label="predict_parts - Break Down, Shap", expanded=True):
-            
-            predict_parts_type = st.selectbox(label = "type", options = ["break_down", "break_down_interactions", "shap", "shap_wrapper"]) #"break_down_interactions" "shap_wrapper"
+            with st.expander(label="predict_parts - Break Down, Shap", expanded=True):
 
-            if predict_parts_type == "shap_wrapper":
-                shap_html_list = []
-                if LOAD_REDIS("BUTTON_ERKLÄR"):
-                    import streamlit.components.v1 as components
-                    for i in LOAD_REDIS("slider_idx"):
-                            #st.write("Zeile: ", str(i))
-                            shap_html = EXPLAINER.predict_parts(new_observation = OPS.loc[i], type= predict_parts_type, keep_distributions = False, interaction_preference = 0)
-
-                try:
-                    for i in shap_html_list:
-                        st.pyplot(i.plot())
-                except:
-                    st.warning("Button - Erklärungen berechnen lassen -  drücken")
-                    st.stop()
-            
-            else:
-                if LOAD_REDIS("BUTTON_ERKLÄR"):
-                    predict_parts_plot = {'ibd':[]}
-                    predict_parts_dataframe = list()
-                    for i in LOAD_REDIS("slider_idx"):
-                        idb = EXPLAINER.predict_parts( new_observation = OPS.loc[i], type= predict_parts_type, keep_distributions = False , label = str(i), interaction_preference = 0 )
-                        predict_parts_plot['ibd'].append(idb)
-                        predict_parts_dataframe.append(idb.result)
+                pp_list = []
+                for i in slider_idx:
+                    pp = EXPLAINER.predict_parts( new_observation = OPS.loc[i], type= predict_parts_type , label = str(i))
+                    pp_list += [pp]
+                
+                st.plotly_chart(pp_list[0].plot(pp_list[1::], show=False), use_column_width=True)
                     
-                    SAVE_REDIS(WERT = "predict_parts", INHALT = predict_parts_plot)
-                    SAVE_REDIS(WERT = "predict_parts_dataframe", INHALT = predict_parts_dataframe)
-                
+
+        my_bar_training.progress(20)
+
+        if "predict_profile" in ERKLÄRUNGEN:
+            with st.expander(label="predict_profile - Ceteris Paribus", expanded=True):
+               
+                ppr_list = []
+                for i in slider_idx:
+                    player = OPS.loc[i]
+                    ppr = EXPLAINER.predict_profile(new_observation = player, variables=variable_type_model_profile_cat ,  type="ceteris_paribus",  label=i)
+                    ppr_list += [ppr]
+
                 try:
-                    if LOAD_REDIS("GRAFIK_WAHL") == "Tabellen":
-                        for i in LOAD_REDIS("predict_parts_dataframe"):
-                            st.write(i.iloc[:,2:-3])
-
-                    if LOAD_REDIS("GRAFIK_WAHL") == "Grafiken":
-                        st.plotly_chart(LOAD_REDIS("predict_parts")['ibd'][0].plot(LOAD_REDIS("predict_parts")['ibd'][1:], show=False, max_vars=100), use_column_width=True)
-
+                    st.plotly_chart(ppr_list[0].plot(ppr_list[1::], show=False), use_column_width=True)
                 except:
                     st.warning("Button - Erklärungen berechnen lassen -  drücken")
                     st.stop()
 
-    my_bar_training.progress(20)
 
-    if "predict_profile" in LOAD_REDIS("Auswahl_Erklärung"):
-        with st.expander(label="predict_profile - Ceteris Paribus", expanded=True):
+        my_bar_training.progress(30)
 
-            display_info("Interpretation","Break_down_Attributions") # Information Einblenden
-            
-            variable_type_model_profile_cat = st.multiselect(label = "variable_type_model_profile_cat", options = COLUMNS , default = COLUMNS[0])
-
-            if LOAD_REDIS("BUTTON_ERKLÄR"):
-
-                va = {'ibd':[]}
-                predict_profile_dataframe = list()
-                for i in LOAD_REDIS("slider_idx"):
-                    player = OPS.loc[i]
-                    idb = EXPLAINER.predict_profile(new_observation = player, variables=variable_type_model_profile_cat ,  type="ceteris_paribus",  label=i)
-                    va['ibd'].append(idb)
-                    predict_profile_dataframe.append(idb.result)
-
-                
-                SAVE_REDIS(WERT ="predict_profile", INHALT = va)
-                SAVE_REDIS(WERT ="predict_profile_dataframe", INHALT = predict_profile_dataframe)
-
-            try:
-                if LOAD_REDIS("GRAFIK_WAHL") == "Tabellen":
-                    for i in LOAD_REDIS("predict_profile_dataframe"):
-                        st.write(i)
-
-                if LOAD_REDIS("GRAFIK_WAHL") == "Grafiken":
-                    st.plotly_chart(LOAD_REDIS("predict_profile")['ibd'][0].plot(LOAD_REDIS("predict_profile")['ibd'][1:], show=False), use_column_width=True)
-            except:
-                st.warning("Button - Erklärungen berechnen lassen -  drücken")
-                st.stop()
-
-        print(NAMESPACE, "predict_profile fertig")
-
-    my_bar_training.progress(30)
-
-    if "predict_surrogate" in LOAD_REDIS("Auswahl_Erklärung"):
-        with st.expander(label="predict_surrogate - Lime", expanded=True):
-
-            #Lime plotten
-            if LOAD_REDIS("BUTTON_ERKLÄR"):
-                
+        if "predict_surrogate" in ERKLÄRUNGEN:
+            with st.expander(label="predict_surrogate - Lime", expanded=True):
+                    
                 lime_explanation_list = []
                 lime_explanation_dataframe = list()
-                for i in LOAD_REDIS("slider_idx"):
+                for i in slider_idx:
                     # st.write("Zeile: ", str(i))
                     lime = EXPLAINER.predict_surrogate(OPS.loc[i],mode='classification')
                     lime_explanation_list.append(lime.as_html(show_all=False))
                     lime_explanation_dataframe.append(lime.result)
-                
-                SAVE_REDIS(WERT= "lime_explanation_list", INHALT = lime_explanation_list)
-                SAVE_REDIS(WERT= "lime_explanation_dataframe", INHALT = lime_explanation_dataframe)
 
-            try:
-                if LOAD_REDIS("GRAFIK_WAHL") == "Tabellen":
-                    for i in LOAD_REDIS("lime_explanation_dataframe"):
-                        st.write(i)
-                
-                if LOAD_REDIS("GRAFIK_WAHL") == "Grafiken":
-                    import streamlit.components.v1 as components
-                    for i in LOAD_REDIS("lime_explanation_list"):
-                        components.html(i, height=1000)
-            except:
-                st.warning("Button - Erklärungen berechnen lassen -  drücken")
-                st.stop()
+                import streamlit.components.v1 as components
+                for i in lime_explanation_list:
+                    components.html(i, height=1000)
 
-        print(NAMESPACE, "predict_surrogate fertig")
 
-    if "model_parts" in LOAD_REDIS("Auswahl_Erklärung") or "model_profile" in LOAD_REDIS("Auswahl_Erklärung") or "model_surrogate" in LOAD_REDIS("Auswahl_Erklärung"):
+    if any(item in ["model_parts", "model_profile", "model_surrogate"] for item in ERKLÄRUNGEN)is True:
         st.write("________")
-        st.subheader("Globale Erklärungen")
+        st.subheader("Global Explainations")
 
-    my_bar_training.progress(40)
+        my_bar_training.progress(40)
 
-    if "model_parts" in LOAD_REDIS("Auswahl_Erklärung"):
-        with st.expander(label="model_parts - Permutationsbasierte Merkmalswichtigkeit, Shap Summary", expanded=True):
-            
-            #model_parts_type = st.selectbox(label = "Type", options = ["variable_importance"]) # "ratio", "difference"
+        if "model_parts" in ERKLÄRUNGEN:
+            with st.expander(label="model_parts - Permutationsbasierte Merkmalswichtigkeit, Shap Summary", expanded=True):
+                
+                #model_parts_type = st.selectbox(label = "Type", options = ["variable_importance"]) # "ratio", "difference"
 
-            if LOAD_REDIS("BUTTON_ERKLÄR"):
-                SAVE_REDIS(WERT = "variable_importance", INHALT = EXPLAINER.model_parts(loss_function = "1-auc", type = "variable_importance"))
+                variable_importance = EXPLAINER.model_parts(loss_function = "1-auc", type = "variable_importance")
                 
                 try:
                     exp = EXPLAINER.model_parts(type='shap_wrapper', shap_explainer_type = "TreeExplainer" ,processes=6, random_state = 42)
                 except:
                     exp = EXPLAINER.model_parts(type='shap_wrapper', processes=6, random_state = 42)
 
-                SAVE_REDIS(WERT = "shap_wrapper_result", INHALT = exp.result)
+                shap_wrapper_result = exp.result
                 try:
-                    SAVE_REDIS(WERT = "shap_wrapper", INHALT = exp)
+                    shap_wrapper = exp
                 except:
-                    SAVE_REDIS(WERT = "shap_wrapper", INHALT = exp.plot(show = False))
-            try:
-                if LOAD_REDIS("GRAFIK_WAHL") == "Tabellen":
-                    st.write("Permutationsbasierte Merkmalswichtigkeit")
-                    st.dataframe(LOAD_REDIS("variable_importance").result[:-1].style.bar(subset=["dropout_loss"], color='#d65f5f'), height= 10000, width = 10000)
-                    st.write("Shap Summary")
-                    st.write(LOAD_REDIS("shap_wrapper_result"))
+                    shap_wrapper = exp.plot(show = False)
 
-                if LOAD_REDIS("GRAFIK_WAHL") == "Grafiken":
+                try:
                     st.write("Permutationsbasierte Merkmalswichtigkeit")
-                    st.plotly_chart(LOAD_REDIS("variable_importance").plot(show = False))
+                    st.plotly_chart(variable_importance.plot(show = False))
 
                     st.write("Shap Summary")
                     try:
-                        st.pyplot(LOAD_REDIS("shap_wrapper").plot(show = False))
+                        st.pyplot(shap_wrapper.plot(show = False))
                     except:
-                        st.pyplot(LOAD_REDIS("shap_wrapper"))
+                        st.pyplot(shap_wrapper)
 
-            except:
-                st.warning("Button - Erklärungen berechnen lassen -  drücken")
-                st.stop()
+                except:
+                    st.warning("Button - Erklärungen berechnen lassen -  drücken")
+                    st.stop()
 
-        print(NAMESPACE, "model_parts fertig")
+        my_bar_training.progress(50)
 
-    my_bar_training.progress(50)
-
-    if "model_profile" in LOAD_REDIS("Auswahl_Erklärung"):
-        with st.expander(label="model_profile - Partiellen Abhängigkeitskurven", expanded=True):
-            
-            # pdp plots
-            model_profile_var = st.multiselect(label = "model_profile_var", options = COLUMNS, default=COLUMNS[0])
-            variable_type_model_profile = st.selectbox(label = "variable_type_model_profile", options = ['numerical', 'categorical'])
-            #variable_type_model_profile_cat = st.multiselect(label = "variable_type_model_profile_cat", options =COLUMNS)
-
-            st.write("numeric_features: ")
-            st.write(LOAD_REDIS(WERT = "numeric_features"))
-            st.write("categorical_features: ")
-            st.write(LOAD_REDIS(WERT = "categorical_features"))
-
-            if LOAD_REDIS("BUTTON_ERKLÄR"):
+        if "model_profile" in ERKLÄRUNGEN:
+            with st.expander(label="model_profile - Partiellen Abhängigkeitskurven", expanded=True):
+                
+                # pdp plots
                 partial = EXPLAINER.model_profile(type='partial', label='partial',variable_type =variable_type_model_profile, variables =model_profile_var)
-                SAVE_REDIS(WERT = "partial", INHALT = partial.plot(geom = "profiles", size = 1,  show=False))
-                SAVE_REDIS(WERT = "partial_dataframe", INHALT = partial.result)
-            # groups = variable_type_model_profile_cat
-            try:
-                if LOAD_REDIS("GRAFIK_WAHL") == "Tabellen":
-                    st.write(LOAD_REDIS("partial_dataframe"))
-                if LOAD_REDIS("GRAFIK_WAHL") == "Grafiken":
-                    st.plotly_chart(LOAD_REDIS("partial"), use_column_width=True) #[accumulated,conditional]
-            except:
-                st.warning("Button - Erklärungen berechnen lassen -  drücken")
-                st.stop()
+                partial = partial.plot(geom = "profiles", size = 1,  show=False)
+                # groups = variable_type_model_profile_cat
+                try:
+                    st.plotly_chart(partial, use_column_width=True) #[accumulated,conditional]
+                except:
+                    st.warning("Button - Erklärungen berechnen lassen -  drücken")
+                    st.stop()
 
-        print(NAMESPACE, "model_profile fertig")
+        my_bar_training.progress(60)
 
-    my_bar_training.progress(60)
+        if "model_surrogate" in ERKLÄRUNGEN:
+            with st.expander(label="model_surrogate - Lime Entscheidungsbaum", expanded=True):
 
-    if "model_surrogate" in LOAD_REDIS("Auswahl_Erklärung"):
-        with st.expander(label="model_surrogate - Lime Entscheidungsbaum", expanded=True):
-
-            MAX_VARS = st.number_input(label= "max_vars", value = 5)
-            MAX_DEPTH = st.number_input(label="max_depth", value = 3)
-
-            if LOAD_REDIS("BUTTON_ERKLÄR"):
-            
                 model_surrogate_tree = EXPLAINER.model_surrogate(type='tree', max_vars= MAX_VARS, max_depth = MAX_DEPTH)
+                
                 from sklearn import tree
 
-                SAVE_REDIS(WERT ="model_surrogate_tree_performane", INHALT = model_surrogate_tree.performance)
-                SAVE_REDIS(WERT ="model_surrogate_tree_feature_names", INHALT = model_surrogate_tree.feature_names)
-                SAVE_REDIS( WERT = "model_surrogate_tree",  INHALT = tree.export_graphviz(
+                model_surrogate_tree_performane = model_surrogate_tree.performance
+                model_surrogate_tree_feature_names = model_surrogate_tree.feature_names
+                model_surrogate_tree = tree.export_graphviz(
                     decision_tree = model_surrogate_tree,
                     feature_names = model_surrogate_tree.feature_names ,
                     class_names = model_surrogate_tree.class_names , 
                     filled =True,
                     rounded = True,
-                    out_file=None))
+                    out_file=None)
 
-            try:
-                # Vergleich mit verwendeten Modell
-                st.write("Eingereichtes Modell:")
-                st.write(EXPLAINER.model_performance('classification').result)
-                # Performance des model_surrogates
-                st.write("Surrogate Modell:")
-                st.write(LOAD_REDIS("model_surrogate_tree_performane"))
-                # Verwendete Klassen
-                st.write("Verwendete Attribute für den Surrogate:")
-                st.write(LOAD_REDIS("model_surrogate_tree_feature_names"))
-                # Baum Plotten
-                st.graphviz_chart(LOAD_REDIS("model_surrogate_tree"))
+                st.graphviz_chart(model_surrogate_tree)
+                try:
+                    # Vergleich mit verwendeten Modell
+                    st.write("Eingereichtes Modell:")
+                    st.write(EXPLAINER.model_performance.result)
+                    # Performance des model_surrogates
+                    st.write("Surrogate Modell:")
+                    st.write(model_surrogate_tree_performane)
+                    # Verwendete Klassen
+                    st.write("Verwendete Attribute für den Surrogate:")
+                    st.write(model_surrogate_tree_feature_names)
+                    # Baum Plotten
+                    st.graphviz_chart(model_surrogate_tree)
 
-            except:
-                st.warning("Button - Erklärungen berechnen lassen -  drücken")
-                st.stop()
-
-        print(NAMESPACE, "model_surrogate fertig")
+                except:
+                    st.warning("Button - Erklärungen berechnen lassen -  drücken")
+                    st.stop()
 
     my_bar_training.progress(70)
 
@@ -570,11 +493,6 @@ def main():
     my_bar_training_head.empty()
     st.stop()
 
-
-
-
-
-    
 
 if __name__ == "__main__":
     main()
