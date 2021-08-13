@@ -313,20 +313,20 @@ def main():
         with st.expander("Training Result"):
             st.dataframe(display_container1[1])
 
-        PLOTS = st.multiselect(
-            label = "AUSWAHL_PLOTS", 
-            options = ["residuals_interactive", "residuals", "error", "cooks", "rfe", "learning", "boundary", "rfe", "vc", "manifold", "feature", "feature_all", "parameter", "feature", "tree"], 
-            default = ["residuals_interactive", "residuals", "error"]
-            )
+            PLOTS = st.multiselect(
+                label = "AUSWAHL_PLOTS", 
+                options = ["residuals_interactive", "residuals", "error", "cooks", "rfe", "learning", "boundary", "rfe", "vc", "manifold", "feature", "feature_all", "parameter", "feature", "tree"], 
+                default = ["residuals_interactive", "residuals", "error"]
+                )
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("### Ergebnisse TRAININGS-Datensatz")
-            plot_model_regression(MODEL, PLOTS, True)
-                    
-        with col2:
-            st.markdown("### Ergebnisse TEST-Datensatz") 
-            plot_model_regression(MODEL, PLOTS, False)
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown("### Ergebnisse TRAININGS-Datensatz")
+                plot_model_regression(MODEL, PLOTS, True)
+                        
+            with col2:
+                st.markdown("### Ergebnisse TEST-Datensatz") 
+                plot_model_regression(MODEL, PLOTS, False)
         
 
     st.header("Explain trained Model")
