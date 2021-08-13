@@ -84,7 +84,7 @@ st.sidebar.write("Dalex: ", dx.__version__)
 def upload_data(file):
     DF = pd.read_csv(file, encoding='utf-8')
 
-def plot_model(MODEL, PLOTS, use_train_data ):
+def plot_model_classification(MODEL, PLOTS, use_train_data ):
     for i in PLOTS:
         try:
             st.markdown(f"#### {i}")
@@ -92,6 +92,13 @@ def plot_model(MODEL, PLOTS, use_train_data ):
         except:
             st.write(f"Plot {i} konnte nicht erstellt werden!")
 
+def plot_model_regression(MODEL, PLOTS, use_train_data ):
+    for i in PLOTS:
+        try:
+            st.markdown(f"#### {i}")
+            pcr.plot_model(MODEL, i ,use_train_data = use_train_data, display_format="streamlit")
+        except:
+            st.write(f"Plot {i} konnte nicht erstellt werden!")
 ################################################
 # Main
 ################################################
@@ -235,24 +242,76 @@ def main():
             col1, col2 = st.columns(2)
             with col1:
                 st.markdown("### Ergebnisse TRAININGS-Datensatz")
-                plot_model(MODEL, PLOTS, True)
+                plot_model_classification(MODEL, PLOTS, True)
                         
             with col2:
                 st.markdown("### Ergebnisse TEST-Datensatz") 
-                plot_model(MODEL, PLOTS, False)
+                plot_model_classification(MODEL, PLOTS, False)
 
 
 
     elif TYPE == "Regression":
-        if st.button("Train Model"):
-            SETUPREGRESSION = pcr.setup(data = DATENSATZ, target = TARGET, silent = True, html = False)
-            BEST = pcr.compare_models()
+        with st.form("Setup Regression"):
+            train_size = st.slider(label= "train_size", min_value = 0.01, max_value=1.00, value= 0.70)
+            normalize = st.selectbox(label = "normalize", options = [False, True])
+            submitted = st.form_submit_button("Run Setup")
+
+        if submitted:
+            with st.spinner("Setup"):
+                SETUPREGRESSION = pcr.setup(
+                    data = DATENSATZ, 
+                    target = TARGET, 
+                    silent = True, 
+                    html = False)
+                
+                pcr.save_config(file_name = 'config/classification_config.pkl')
 
         try:
-            st.write(pcr.get_config("display_container")[1])
-            st.write(BEST)
+            with st.expander(label = "Setup Result Regression"):
+                st.write("Setup")
+                import streamlit.components.v1 as components
+                components.html(pcr.get_config("display_container")[0].to_html(), scrolling = True)
+                st.write("Traindata")
+                st.write(pd.concat([pcr.get_config("X_train"),pcr.get_config("y_train")], axis=1, join='inner'))
+                st.write("Testdata")
+                st.write(pd.concat([pcr.get_config("X_test"),pcr.get_config("y_test")], axis=1, join='inner'))
         except:
-            pass
+            st.stop()
+
+        st.header("Train Model Regression")
+            
+        with st.form(key = "Train_classification_Model"):
+            MODELS_regression = ["lr", "lasso", "ridge", "en", "lar", "llar", "omp", "br", "ard", "par", "ransac", "tr", "huber", "kr", "svm", "knn", "dt", "rf", "et", "ada", "gbr", "mlp", "xgboost", "lightgbm", "catboost"]
+            MODELS_WAHL = st.multiselect(
+                label = "models", 
+                options = MODELS_regression,
+                default = MODELS_regression)
+            SORT = st.selectbox(label = "sort", options = ["Accuracy", "AUC", "Recall", "Prec.", "F1"])
+            regression_submit_button = st.form_submit_button(label='Train Model(s)')
+
+        if regression_submit_button:
+            with st.spinner("Train Model(s)"):
+                if len(MODELS_WAHL) > 1:
+                    BEST = pcr.compare_models(
+                        include = MODELS_WAHL,
+                        )
+                else:
+                    BEST = pcr.create_model(
+                        estimator = MODELS_WAHL[0]
+                        )
+
+                pcr.save_model(model = BEST, model_name="Model/model", model_only =True)
+                pcr.save_model(model = BEST, model_name="Model/modelpipeline", model_only =False)
+
+        try:
+            display_container1 = pcr.get_config("display_container")
+            MODEL = pcr.load_model(model_name="Model/model")
+            MODELPIPELINE = pcr.load_model(model_name="Model/modelpipeline")
+        except:
+            st.stop()
+
+        with st.expander("Training Result"):
+            st.dataframe(display_container1[1])
 
         PLOTS = st.multiselect(
             label = "AUSWAHL_PLOTS", 
@@ -263,11 +322,11 @@ def main():
         col1, col2 = st.columns(2)
         with col1:
             st.markdown("### Ergebnisse TRAININGS-Datensatz")
-            plot_model(MODEL, PLOTS, True)
+            plot_model_regression(MODEL, PLOTS, True)
                     
         with col2:
             st.markdown("### Ergebnisse TEST-Datensatz") 
-            plot_model(MODEL, PLOTS, False)
+            plot_model_regression(MODEL, PLOTS, False)
         
 
     st.header("Explain trained Model")
@@ -459,19 +518,21 @@ def main():
 
                 model_surrogate_tree_performane = model_surrogate_tree.performance
                 model_surrogate_tree_feature_names = model_surrogate_tree.feature_names
-                model_surrogate_tree = tree.export_graphviz(
+                
+                model_surrogate_tree_plot = tree.export_graphviz(
                     decision_tree = model_surrogate_tree,
-                    feature_names = model_surrogate_tree.feature_names ,
+                    feature_names = model_surrogate_tree_feature_names ,
                     class_names = model_surrogate_tree.class_names , 
                     filled =True,
-                    rounded = True,
-                    out_file=None)
+                    rounded = True)
 
-                st.graphviz_chart(model_surrogate_tree)
+                from dtreeviz.trees import dtreeviz
+
+                st.graphviz_chart(model_surrogate_tree_plot)
+
                 try:
                     # Vergleich mit verwendeten Modell
                     st.write("Eingereichtes Modell:")
-                    st.write(EXPLAINER.model_performance.result)
                     # Performance des model_surrogates
                     st.write("Surrogate Modell:")
                     st.write(model_surrogate_tree_performane)
@@ -479,10 +540,8 @@ def main():
                     st.write("Verwendete Attribute für den Surrogate:")
                     st.write(model_surrogate_tree_feature_names)
                     # Baum Plotten
-                    st.graphviz_chart(model_surrogate_tree)
 
                 except:
-                    st.warning("Button - Erklärungen berechnen lassen -  drücken")
                     st.stop()
 
     my_bar_training.progress(70)
