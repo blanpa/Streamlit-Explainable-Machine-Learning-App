@@ -5,3 +5,5 @@ pycaret
 xgboost
 catboost
 lightgbm
+lime
+shap

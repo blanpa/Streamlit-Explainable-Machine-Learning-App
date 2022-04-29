@@ -6,7 +6,7 @@ import streamlit as st
 from streamlit import caching
 import streamlit.components.v1 as components
 from streamlit.elements.image import _BytesIO_to_bytes
-import SessionState
+#import SessionState
 import codecs 
 
 #Standart
@@ -105,7 +105,6 @@ def plot_model_regression(MODEL, PLOTS, use_train_data ):
 def main():
     TYPE = st.sidebar.selectbox(label = "Type", options = ["Classification", "Regression"])
     st.write(f"# {TYPE}")
-
     DATA = st.sidebar.selectbox(label = "Data", options = ["Dummydata", "CSV-File"])
 
     if DATA == "Dummydata":
@@ -118,7 +117,6 @@ def main():
 
         else:
             DATENSATZ = get_data(AUSWAHL)
-            
 
     elif DATA == "CSV-File":
         FILE = st.sidebar.file_uploader("Choose a file")
@@ -219,13 +217,13 @@ def main():
                         estimator = MODELS_WAHL[0]
                         )
 
-                pcc.save_model(model = BEST, model_name="Model/model", model_only =True)
-                pcc.save_model(model = BEST, model_name="Model/modelpipeline", model_only =False)
+                pcc.save_model(model = BEST, model_name="model/model", model_only =True)
+                pcc.save_model(model = BEST, model_name="model/modelpipeline", model_only =False)
 
         try:
             display_container1 = pcc.get_config("display_container")
-            MODEL = pcc.load_model(model_name="Model/model")
-            MODELPIPELINE = pcc.load_model(model_name="Model/modelpipeline")
+            MODEL = pcc.load_model(model_name="model/model")
+            MODELPIPELINE = pcc.load_model(model_name="model/modelpipeline")
         except:
             st.stop()
 
@@ -300,13 +298,13 @@ def main():
                         estimator = MODELS_WAHL[0]
                         )
 
-                pcr.save_model(model = BEST, model_name="Model/model", model_only =True)
-                pcr.save_model(model = BEST, model_name="Model/modelpipeline", model_only =False)
+                pcr.save_model(model = BEST, model_name="model/model", model_only =True)
+                pcr.save_model(model = BEST, model_name="model/modelpipeline", model_only =False)
 
         try:
             display_container1 = pcr.get_config("display_container")
-            MODEL = pcr.load_model(model_name="Model/model")
-            MODELPIPELINE = pcr.load_model(model_name="Model/modelpipeline")
+            MODEL = pcr.load_model(model_name="model/model")
+            MODELPIPELINE = pcr.load_model(model_name="model/modelpipeline")
         except:
             st.stop()
 
